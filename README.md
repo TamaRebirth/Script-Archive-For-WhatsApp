@@ -28,3 +28,4 @@
 ✅ **Berpotensi Menjadi Programmer Yang Keren Dan Hebat**
 ✅ **Peluang Berwirausaha Terbuka Ketika Kalian Menjual Script Yang Sudah Jadi, Dari Base Yang Di Ambil Di Sini**
 ✅ **Mencoba Hal Baru, Seperti Coding, Dan Memodifikasi File Yang Rumpang**
+----
