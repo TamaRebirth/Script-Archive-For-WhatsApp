@@ -23,9 +23,9 @@
 
 # ⚙️Kegunaan Proyek Ini:
 
-✅ **Memudahkan Dalam Mencari Base hatsApp Yang Simple**
-✅ **Diberikan Banyak Base Yang Berguna Untuk Dijual (Sudah Dalam Bentuk Script Yang Jadi)**
-✅ **Berpotensi Menjadi Programmer Yang Keren Dan Hebat**
-✅ **Peluang Berwirausaha Terbuka Ketika Kalian Menjual Script Yang Sudah Jadi, Dari Base Yang Di Ambil Di Sini**
-✅ **Mencoba Hal Baru, Seperti Coding, Dan Memodifikasi File Yang Rumpang**
+✅ Memudahkan Dalam Mencari Base hatsApp Yang Simple
+✅ Diberikan Banyak Base Yang Berguna Untuk Dijual (Sudah Dalam Bentuk Script Yang Jadi)
+✅ Berpotensi Menjadi Programmer Yang Keren Dan Hebat
+✅ Peluang Berwirausaha Terbuka Ketika Kalian Menjual Script Yang Sudah Jadi, Dari Base Yang Di Ambil Di Sini
+✅ Mencoba Hal Baru, Seperti Coding, Dan Memodifikasi File Yang Rumpang
 ----
