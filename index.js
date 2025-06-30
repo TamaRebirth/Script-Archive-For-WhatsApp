@@ -86,8 +86,7 @@ async function sendUpdate() {
     const stock = parseStock(html);
     const message = formatStock(stock);
 
-    console.log("📦 Pesan siap dikirim
-", message);
+    console.log("📦 Pesan siap dikirim", message);
     await bot.telegram.sendMessage(CHANNEL_ID, message, { parse_mode: "Markdown" });
     console.log(`[${new Date().toLocaleTimeString()}] ✅ Pesan berhasil dikirim ke ${CHANNEL_ID}`);
   } catch (e) {
