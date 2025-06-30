@@ -1,43 +1,44 @@
-console.log("🟢 Bot file dimulai...");
-
 const { Telegraf } = require("telegraf");
-const axios = require("axios");
-const cheerio = require("cheerio");
-const { BOT_TOKEN, CHANNEL_ID, SOURCE_URL } = require("./config");
+const puppeteer = require("puppeteer");
+const { BOT_TOKEN, CHANNEL_ID, TARGET_URL } = require("./config");
 
 const bot = new Telegraf(BOT_TOKEN);
 
-async function fetchHtml() {
+async function fetchStock() {
+  console.log("🧠 Membuka browser...");
+  const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox"] });
+  const page = await browser.newPage();
+
   try {
-    const res = await axios.get(SOURCE_URL);
-    console.log("✅ HTML berhasil diambil, panjang:", res.data.length);
-    return res.data;
+    await page.goto(TARGET_URL, { waitUntil: "networkidle2" });
+    console.log("📄 Halaman dimuat.");
+
+    const stock = await page.evaluate(() => {
+      const data = {};
+      const sections = document.querySelectorAll(".et_pb_tab");
+      const tabNames = ["Seeds", "Eggs", "Gear", "Summer Shop", "Cosmetics"];
+      
+      sections.forEach((section, i) => {
+        const tabName = tabNames[i] || `Tab ${i + 1}`;
+        const items = Array.from(section.querySelectorAll("ul li")).map(li => li.innerText.trim()).filter(Boolean);
+        data[tabName] = items;
+      });
+
+      const weatherDiv = Array.from(document.querySelectorAll("div")).find(el => el.textContent.includes("WEATHER"));
+      const weatherText = weatherDiv?.nextElementSibling?.innerText?.trim() || "Tidak diketahui";
+      data["Weather"] = [weatherText];
+
+      return data;
+    });
+
+    await browser.close();
+    console.log("✅ Stock berhasil diambil.");
+    return stock;
   } catch (e) {
-    console.error("❌ Gagal mengambil HTML:", e.message);
+    await browser.close();
+    console.error("❌ Gagal ambil stock:", e.message);
     throw e;
   }
-}
-
-function parseStock(html) {
-  const $ = cheerio.load(html);
-  const stock = {};
-  const tabs = ["Seeds", "Eggs", "Gear", "Summer Shop", "Cosmetics"];
-
-  tabs.forEach(tab => {
-    const section = $(`div:contains("${tab}")`).next("ul");
-    const items = [];
-    section.find("li").each((i, li) => {
-      const item = $(li).text().trim();
-      if (item) items.push(item);
-    });
-    stock[tab] = items;
-  });
-
-  const weather = $("div:contains('WEATHER')").next().text().trim() || "Tidak diketahui";
-  stock["Weather"] = [weather];
-
-  console.log("✅ Parsing selesai, data:", stock);
-  return stock;
 }
 
 function formatStock(stock) {
@@ -56,7 +57,7 @@ function formatStock(stock) {
     EggsShop: "🥚",
     GearShop: "🛠️",
     SummerShop: "🎁",
-    CosmeticsShop: "💄",
+    Cosmetics: "💄",
     Weather: "🌤️"
   };
 
@@ -66,12 +67,13 @@ function formatStock(stock) {
 ${emoji} *${kategori} Stock*
 `;
     if (!items || items.length === 0) {
-      msg += "Tidak ada item tersedia"
+      msg += "_Tidak ada item tersedia_
+";
     } else {
-      items.forEach(item => {
+      for (const item of items) {
         msg += `• ${item}
 `;
-      });
+      }
     }
   }
 
@@ -79,23 +81,24 @@ ${emoji} *${kategori} Stock*
 }
 
 async function sendUpdate() {
-  console.log("🔍 Memulai pengambilan stock...");
+  console.log("🚀 Memulai update stock...");
 
   try {
-    const html = await fetchHtml();
-    const stock = parseStock(html);
+    const stock = await fetchStock();
     const message = formatStock(stock);
 
     console.log("📦 Pesan siap dikirim", message);
     await bot.telegram.sendMessage(CHANNEL_ID, message, { parse_mode: "Markdown" });
-    console.log(`[${new Date().toLocaleTimeString()}] ✅ Pesan berhasil dikirim ke ${CHANNEL_ID}`);
+    console.log("✅ Pesan berhasil dikirim ke channel.");
   } catch (e) {
-    console.error("❌ Gagal kirim update:", e.message);
+    console.error("❌ Gagal mengirim pesan:", e.message);
   }
 }
 
 bot.launch().then(() => {
-  console.log("🚀 Grow A Garden Bot aktif.");
+  console.log("🤖 Bot aktif, mengirim update awal...");
   sendUpdate();
   setInterval(sendUpdate, 5 * 60 * 1000);
+}).catch(err => {
+  console.error("❌ Gagal launch bot:", err.message);
 });
