@@ -67,8 +67,7 @@ function formatStock(stock) {
 ${emoji} *${kategori} Stock*
 `;
     if (!items || items.length === 0) {
-      msg += "_Tidak ada item tersedia_
-";
+      msg += "Tidak ada item tersedia";
     } else {
       for (const item of items) {
         msg += `• ${item}
