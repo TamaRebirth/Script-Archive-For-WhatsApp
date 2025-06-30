@@ -1,13 +1,12 @@
 {
-  "name": "growagarden-bot",
+  "name": "growagarden-puppeteer-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "cheerio": "^1.0.0-rc.12",
+    "puppeteer": "^21.3.8",
     "telegraf": "^4.12.2"
   }
 }
